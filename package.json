@@ -1,0 +1,24 @@
+{
+  "name": "shell-menu",
+  "version": "1.0.0",
+  "description": "Shell function for interactive menu",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexkuz/shell-menu.git"
+  },
+  "keywords": [
+    "shell",
+    "terminal",
+    "menu",
+    "select"
+  ],
+  "author": "Alexander <alexkuz@gmail.com> (http://kuzya.org/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexkuz/shell-menu/issues"
+  },
+  "homepage": "https://github.com/alexkuz/shell-menu#readme"
+}
