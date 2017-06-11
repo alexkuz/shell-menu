@@ -21,6 +21,7 @@ function _print_one_line {
 
 function _cleanup {
 	tput cnorm
+	stty echo
 	exit $?
 }
 
@@ -31,6 +32,7 @@ function menu {
 	fi
 	tput civis
 	trap _cleanup INT TERM
+	stty -echo
 
 	sel=0
 	result_var=$1
