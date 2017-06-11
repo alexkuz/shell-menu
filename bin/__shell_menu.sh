@@ -3,15 +3,40 @@
 ITEMS_LIMIT="${ITEMS_LIMIT:-15}"
 ITEM_DELIMITER="${ITEM_DELIMITER:-//}"
 
+_ESC_RE="s/[`printf "\x1b"`]\[.\{1,5\}m//g"
+_COLS=$(tput cols)
+
+function _print_one_line {
+	line=$1
+	stripped_line=$(echo $line | sed -e $_ESC_RE)
+	len=${#stripped_line}
+
+	if [[ "$len" -gt "$_COLS" ]]; then
+		w=$(($_COLS - 3))
+		echo "${line:0:$w}...\033[0m"
+	else
+		echo "$line\033[0m"
+	fi
+}
+
+function _cleanup {
+	tput cnorm
+	exit $?
+}
+
 function menu {
 	if [ -z $1 ]; then 
 		echo "Usage: menu.sh <variable_name> <option1> <option2> ..."
 		exit 1
 	fi
+	tput civis
+	trap _cleanup INT TERM
+
 	sel=0
 	result_var=$1
 	args=("$@")
 	args_len=${#args[@]}
+
 	if [ $args_len -le $(($ITEMS_LIMIT + 1)) ]; then
 		show_all=1
 	else
@@ -29,12 +54,12 @@ function menu {
 		i=0
 		for item in "${items[@]}"; do
 			if [[ $item == *"${ITEM_DELIMITER}"* ]]; then
-				item="${item%%${ITEM_DELIMITER}*} \033[0;36m${item#*${ITEM_DELIMITER}}\033[0m"
+				item="${item%%${ITEM_DELIMITER}*} \033[0;36m${item#*${ITEM_DELIMITER}}"
 			fi
 			if [ "$i" = "$sel" ]; then
-				echo "\033[32;1m❯ ${item}\033[0m"
+				_print_one_line "\033[32;1m❯ ${item}"
 			else
-				echo "  ${item}"
+				_print_one_line "\033[00;0m  ${item}"
 			fi
 			i=$(($i+1))
 		done
@@ -44,10 +69,13 @@ function menu {
 			$'\033')
 				read -rsn1 -t 1 char
 				if [ $? == 1 ]; then
+					tput cnorm
 					exit
 				fi
 				case "$char" in
-					$'\033') exit
+					$'\033')
+						tput cnorm
+						exit
 					;;
 					"[")
 						read -rsn1 input
@@ -75,6 +103,7 @@ function menu {
 		esac
 		echo "\033[${items_len}A\c"
 	done
+	tput cnorm
 }
 
 if [[ ${BASH_SOURCE[0]} != $0 ]]; then
