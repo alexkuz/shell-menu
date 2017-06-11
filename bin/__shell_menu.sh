@@ -24,7 +24,6 @@ function _print_one_line {
 
 function _cleanup {
 	tput cnorm
-	stty echo
 	exit $?
 }
 
@@ -108,6 +107,7 @@ function menu {
 		esac
 		echo "\033[${items_len}A\c"
 	done
+	stty echo
 	tput cnorm
 }
 
