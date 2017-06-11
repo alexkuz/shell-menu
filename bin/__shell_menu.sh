@@ -3,12 +3,15 @@
 ITEMS_LIMIT="${ITEMS_LIMIT:-15}"
 ITEM_DELIMITER="${ITEM_DELIMITER:-//}"
 
-_ESC_RE="s/[`printf "\x1b"`]\[.\{1,5\}m//g"
 _COLS=$(tput cols)
 
 function _print_one_line {
 	line=$1
-	stripped_line=$(echo $line | sed -e $_ESC_RE)
+	# dumb but quick
+	stripped_line=${line//\\033\[[0-9][0-9];[0-9]m/}
+	stripped_line=${stripped_line//\\033\[[0-9][0-9]m/}
+	stripped_line=${stripped_line//\\033\[[0-9]m/}
+	stripped_line=${stripped_line//\\033\[[0-9];[0-9][0-9]m/}
 	len=${#stripped_line}
 
 	if [[ "$len" -gt "$_COLS" ]]; then
