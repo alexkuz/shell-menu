@@ -29,7 +29,7 @@ function menu {
 		i=0
 		for item in "${items[@]}"; do
 			if [[ $item == *"${ITEM_DELIMITER}"* ]]; then
-				item="${item%%${ITEM_DELIMITER}*}  \033[0;36m${item#*${ITEM_DELIMITER}}\033[0m"
+				item="${item%%${ITEM_DELIMITER}*} \033[0;36m${item#*${ITEM_DELIMITER}}\033[0m"
 			fi
 			if [ "$i" = "$sel" ]; then
 				echo "\033[32;1m❯ ${item}\033[0m"
