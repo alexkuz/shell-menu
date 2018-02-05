@@ -104,6 +104,10 @@ function menu {
 				selected_item="${items[$sel]}"
 				eval $result_var='"'"${selected_item%%${ITEM_DELIMITER}*}"'"'; break
 			;;
+			"q"|"Q")
+				tput cnorm
+				exit
+			;;
 		esac
 		echo "\033[${items_len}A\c"
 	done
